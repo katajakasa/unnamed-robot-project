@@ -85,7 +85,7 @@ void writeValue(uint8_t board, uint8_t dev, uint16_t arg1, uint16_t arg2) {
 }
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
 
   for(int i = 0; i < 2; i++) {
     pinMode(inApin[i], OUTPUT);
