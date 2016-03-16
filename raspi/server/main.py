@@ -4,12 +4,13 @@ import argparse
 import logging
 import signal
 import sys
+import time
 from protocol import Protocol
 
 
 if __name__ == "__main__":
     # Initialize argument parser + get settings
-    parser = argparse.ArgumentParser(description='asdf')
+    parser = argparse.ArgumentParser(description='Robot management')
     parser.add_argument('-d,--device', required=True, type=str, dest='device', help='Serial device')
     parser.add_argument('-o,--log', required=False, type=str, dest='logfile', help='Logfile. Default is stdout.')
     args = parser.parse_args()
@@ -31,12 +32,27 @@ if __name__ == "__main__":
     # Our own stuff
     log.info("Starting up.")
     p = Protocol(args.device)
-    print p.setMotor(0, 1, 255)
-    print p.setMotor(1, 1, 255)
-    print p.setServo(0, 200)
-    print p.setServo(1, 500)
-    print p.getCS()
-    print p.getEN()
+    
+    time.sleep(2)
+
+    p.setMotor(0, 2, 0)
+    p.setMotor(1, 2, 0)
+    p.setServo(0, 450)
+    p.setServo(1, 450)
+    p.getCS()
+    p.getEN()
+
+    # Run while not ctrl-c'd
+    run = True
+    while run:
+        try:
+            p.handle()
+            k = p.read()
+            if k != None:
+                print k
+        except KeyboardInterrupt:
+            run = False
+            print "Caught CTRL+C, stopping ..."
 
     # All done, clean up.
     p.close()

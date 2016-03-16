@@ -18,7 +18,7 @@ class Protocol(object):
 
     def __init__(self, device):
         self.device = device
-        self.port = serial.Serial(self.device, 115200)
+        self.port = serial.Serial(self.device, 9600)
         self.buffer = []
         log.info('Opened serial device %s', self.port.name)
 
@@ -55,7 +55,8 @@ class Protocol(object):
             m = self.port.read(8)
             magic_a, magic_b, board, device, arg1, arg2 = struct.unpack('BBBBHH', m)
             if magic_a == self.MAGIC_RECV_A and magic_b == self.MAGIC_RECV_B:
-                self.buffer.insert(0, (board, device, arg1, arg2))
+                data = (board, device, arg1, arg2)
+                self.buffer.insert(0, data)
 
     def read(self):
         try:
