@@ -16,6 +16,13 @@ class Protocol(object):
     MAGIC_SEND_A = 0x13
     MAGIC_SEND_B = 0x37
 
+    MOTOR_SIDE_LEFT = 0
+    MOTOR_SIDE_RIGHT = 1
+
+    MOTOR_DIR_FWD = 0
+    MOTOR_DIR_BWD = 1
+    MOTOR_DIR_STOP = 2
+
     def __init__(self, device):
         self.device = device
         self.port = serial.Serial(self.device, 9600)
@@ -35,19 +42,19 @@ class Protocol(object):
 
     def setMotor(self, motor, direction, value):
         self.writePacket(self.BOARD_MOTOR, motor, direction, value)
-        log.info('Setting motor %d to direction %d with speed %d', motor, direction, value)
+        log.debug('Setting motor %d to direction %d with speed %d', motor, direction, value)
 
     def setServo(self, servo, value):
         self.writePacket(self.BOARD_SERVO, servo, value, 0);
-        log.info('Setting servo %d to position %d', servo, value)
+        log.debug('Setting servo %d to position %d', servo, value)
 
     def getCS(self):
         self.writePacket(self.BOARD_MOTOR, 100, 0, 0);
-        log.info('Get CS')
+        log.debug('Get CS')
 
     def getEN(self):
         self.writePacket(self.BOARD_MOTOR, 101, 0, 0);
-        log.info('Get EN')
+        log.debug('Get EN')
 
     def handle(self):
         self.port.flush()
